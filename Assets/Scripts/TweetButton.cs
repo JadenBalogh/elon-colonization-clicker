@@ -8,6 +8,6 @@ public class TweetButton : MonoBehaviour
 
     public void GainMoney()
     {
-        GameManager.ResourceSystem.AddMoney(moneyPerClick);
+        GameManager.ResourceSystem.ChangeProperty(ResourceProperty.Money, moneyPerClick);
     }
 }

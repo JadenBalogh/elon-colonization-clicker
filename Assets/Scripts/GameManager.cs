@@ -6,11 +6,9 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
 
-    [SerializeField] private RectTransform canvas;
-    public static RectTransform Canvas { get => instance.canvas; }
-
     public static ResourceSystem ResourceSystem { get; private set; }
     public static ShipSystem ShipSystem { get; private set; }
+    public static DaySystem DaySystem { get; private set; }
 
     private void Awake()
     {
@@ -23,5 +21,6 @@ public class GameManager : MonoBehaviour
 
         ResourceSystem = GetComponent<ResourceSystem>();
         ShipSystem = GetComponent<ShipSystem>();
+        DaySystem = GetComponent<DaySystem>();
     }
 }

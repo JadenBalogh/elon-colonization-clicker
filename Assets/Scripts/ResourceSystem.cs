@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,109 +8,70 @@ public class ResourceSystem : MonoBehaviour
 {
     [SerializeField] private UpgradeData passiveGrowth;
 
-    public float Money { get; private set; }
-    public UnityEvent<float> OnMoneyChanged { get; private set; }
-
-    public float Population { get; private set; }
-    public UnityEvent<float> OnPopulationChanged { get; private set; }
-
-    public float Fuel { get; private set; }
-    public UnityEvent<float> OnFuelChanged { get; private set; }
-
-    public float Food { get; private set; }
-    public UnityEvent<float> OnFoodChanged { get; private set; }
-
-    private float moneyRate = 0;
-    public UnityEvent<float> OnMoneyRateChanged { get; private set; }
-
-    private float populationRate = 0;
-    public UnityEvent<float> OnPopulationRateChanged { get; private set; }
-
-    private float fuelRate = 0;
-    public UnityEvent<float> OnFuelRateChanged { get; private set; }
-
-    private float foodRate = 0;
-    public UnityEvent<float> OnFoodRateChanged { get; private set; }
+    private Dictionary<ResourceProperty, float> properties = new Dictionary<ResourceProperty, float>();
+    private Dictionary<ResourceProperty, UnityEvent<float>> propertyEvents = new Dictionary<ResourceProperty, UnityEvent<float>>();
 
     private void Awake()
     {
-        OnMoneyChanged = new UnityEvent<float>();
-        OnPopulationChanged = new UnityEvent<float>();
-        OnFuelChanged = new UnityEvent<float>();
-        OnFoodChanged = new UnityEvent<float>();
-
-        OnMoneyRateChanged = new UnityEvent<float>();
-        OnPopulationRateChanged = new UnityEvent<float>();
-        OnFuelRateChanged = new UnityEvent<float>();
-        OnFoodRateChanged = new UnityEvent<float>();
+        ResourceProperty[] props = (ResourceProperty[])Enum.GetValues(typeof(ResourceProperty));
+        foreach (ResourceProperty prop in props)
+        {
+            properties.Add(prop, 0);
+            propertyEvents.Add(prop, new UnityEvent<float>());
+        }
     }
 
     private void Start()
     {
-        StartCoroutine(PassiveLoop());
+        GameManager.DaySystem.OnDayChanged.AddListener(DayTick);
     }
 
-    private IEnumerator PassiveLoop()
+    public void ChangeProperty(ResourceProperty prop, float value)
     {
-        WaitForSeconds waitOneSecond = new WaitForSeconds(1f);
-        while (true)
-        {
-            AddMoney(moneyRate);
-            AddPopulation(populationRate);
-            AddFuel(fuelRate);
-            AddFood(foodRate);
-
-            yield return waitOneSecond;
-        }
+        properties[prop] += value;
+        propertyEvents[prop].Invoke(properties[prop]);
     }
 
-    public void AddMoney(float money)
+    public float GetProperty(ResourceProperty prop)
     {
-        Money += money;
-        OnMoneyChanged.Invoke(Money);
+        return properties[prop];
     }
 
-    public void AddPopulation(float pop)
+    public void AddPropertyListener(ResourceProperty prop, UnityAction<float> listener)
     {
-        Population += pop;
-        OnPopulationChanged.Invoke(Population);
-        RefreshRates();
+        propertyEvents[prop].AddListener(listener);
     }
 
-    public void AddFuel(float fuel)
+    public void DayTick(int day)
     {
-        Fuel += fuel;
-        OnFuelChanged.Invoke(Fuel);
+        ChangeProperty(ResourceProperty.Money, GetProperty(ResourceProperty.MoneyRate));
+        ChangeProperty(ResourceProperty.Population, GetProperty(ResourceProperty.PopulationRate));
+        ChangeProperty(ResourceProperty.Parts, GetProperty(ResourceProperty.PartsRate));
+        ChangeProperty(ResourceProperty.Food, GetProperty(ResourceProperty.FoodRate));
     }
 
-    public void AddFood(float food)
-    {
-        Food += food;
-        OnFoodChanged.Invoke(Food);
-    }
+    // private void RefreshRates()
+    // {
+    //     float newMoneyRate = 0;
+    //     float newPopulationRate = 0;
+    //     float newFuelRate = 0;
+    //     float newFoodRate = 0;
 
-    private void RefreshRates()
-    {
-        float newMoneyRate = 0;
-        float newPopulationRate = 0;
-        float newFuelRate = 0;
-        float newFoodRate = 0;
+    //     if (Population >= 2)
+    //     {
+    //         newPopulationRate += passiveGrowth.peopleRate * Population;
+    //     }
+    //     newFoodRate += passiveGrowth.foodRate * Population;
+    //     newFuelRate += passiveGrowth.fuelRate * Population;
 
-        if (Population >= 2)
-        {
-            newPopulationRate += passiveGrowth.peopleRate * Population;
-        }
-        newFoodRate += passiveGrowth.foodRate * Population;
-        newFuelRate += passiveGrowth.fuelRate * Population;
+    //     moneyRate = newMoneyRate;
+    //     populationRate = newPopulationRate;
+    //     fuelRate = newFuelRate;
+    //     foodRate = newFoodRate;
 
-        moneyRate = newMoneyRate;
-        populationRate = newPopulationRate;
-        fuelRate = newFuelRate;
-        foodRate = newFoodRate;
-
-        OnMoneyRateChanged.Invoke(moneyRate);
-        OnPopulationRateChanged.Invoke(populationRate);
-        OnFuelRateChanged.Invoke(fuelRate);
-        OnFoodRateChanged.Invoke(foodRate);
-    }
+    //     OnMoneyRateChanged.Invoke(moneyRate);
+    //     OnPopulationRateChanged.Invoke(populationRate);
+    //     OnFuelRateChanged.Invoke(fuelRate);
+    //     OnFoodRateChanged.Invoke(foodRate);
+    // }
 }

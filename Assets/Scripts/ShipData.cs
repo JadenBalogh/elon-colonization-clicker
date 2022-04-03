@@ -6,6 +6,6 @@ using UnityEngine;
 public class ShipData : ScriptableObject
 {
     public float peopleAmount = 0;
-    public float fuelAmount = 0;
+    public float partsAmount = 0;
     public float foodAmount = 0;
 }

@@ -9,7 +9,7 @@ public class ShipSystem : MonoBehaviour
     [SerializeField] private float baseShipSpeed = 2f;
 
     public Ship ShipPrefab { get => shipPrefab; }
-    public Transform ShipTarget { get => shipTarget; }
+    public Vector2 ShipTarget { get => shipTarget.position; }
     public float ShipSpeed { get => baseShipSpeed * shipSpeedMult; }
 
     private float shipSpeedMult = 1f;

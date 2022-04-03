@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public abstract class ResourceRateDisplay : ResourceDisplay
+public class ResourceRateDisplay : ResourceDisplay
 {
     protected override void UpdateText(float amount)
     {

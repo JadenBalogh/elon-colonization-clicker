@@ -3,19 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public abstract class ResourceDisplay : MonoBehaviour
+public class ResourceDisplay : MonoBehaviour
 {
     private readonly string[] Suffixes = { "", "K", "M", "B", "T" };
 
     [SerializeField] private string prefix;
-    [SerializeField] protected TextMeshProUGUI textbox;
+    [SerializeField] private ResourceProperty property;
+
+    protected TextMeshProUGUI textbox;
+
+    private void Awake()
+    {
+        textbox = GetComponent<TextMeshProUGUI>();
+    }
 
     private void Start()
     {
         AddResourceListener();
     }
 
-    protected abstract void AddResourceListener();
+    protected void AddResourceListener()
+    {
+        GameManager.ResourceSystem.AddPropertyListener(property, UpdateText);
+    }
 
     protected virtual void UpdateText(float amount)
     {

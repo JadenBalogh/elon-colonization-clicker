@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: FuelShip1
   m_EditorClassIdentifier: 
   peopleAmount: 0
-  fuelAmount: 500
+  partsAmount: 500
   foodAmount: 0
