@@ -5,13 +5,13 @@ using TMPro;
 
 public class ResourceRateDisplay : ResourceDisplay
 {
-    protected override void UpdateText(float amount)
+    protected override void UpdateText()
     {
-        textbox.text = FormatText(amount, "F1");
+        textbox.text = FormatText(GameManager.ResourceSystem.GetProperty(property));
     }
 
-    protected override string FormatText(float amount, string format)
+    protected override string FormatText(float amount)
     {
-        return "(" + base.FormatText(amount, format) + " / s)";
+        return "(" + base.FormatText(amount) + " / day)";
     }
 }

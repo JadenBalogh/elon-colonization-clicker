@@ -7,6 +7,10 @@ using UnityEngine.Events;
 public class ResourceSystem : MonoBehaviour
 {
     [SerializeField] private UpgradeData passiveGrowth;
+    [SerializeField] private PropertyCap[] propertyCaps;
+    [SerializeField] private BuildingDisplay[] buildings;
+    [SerializeField] private float foodRatePerPerson;
+    [SerializeField] private float starvationDeathRate;
 
     private Dictionary<ResourceProperty, float> properties = new Dictionary<ResourceProperty, float>();
     private Dictionary<ResourceProperty, UnityEvent<float>> propertyEvents = new Dictionary<ResourceProperty, UnityEvent<float>>();
@@ -24,11 +28,26 @@ public class ResourceSystem : MonoBehaviour
     private void Start()
     {
         GameManager.DaySystem.OnDayChanged.AddListener(DayTick);
+        AddPropertyListener(ResourceProperty.Population, (pop) => RefreshProps());
+        AddPropertyListener(ResourceProperty.Food, (food) => RefreshProps());
+    }
+
+    public void SetProperty(ResourceProperty prop, float value)
+    {
+        properties[prop] = value;
+        propertyEvents[prop].Invoke(properties[prop]);
     }
 
     public void ChangeProperty(ResourceProperty prop, float value)
     {
         properties[prop] += value;
+
+        float propCap = GetCap(prop);
+        if (propCap >= 0)
+        {
+            properties[prop] = Mathf.Clamp(properties[prop], 0f, propCap);
+        }
+
         propertyEvents[prop].Invoke(properties[prop]);
     }
 
@@ -48,30 +67,52 @@ public class ResourceSystem : MonoBehaviour
         ChangeProperty(ResourceProperty.Population, GetProperty(ResourceProperty.PopulationRate));
         ChangeProperty(ResourceProperty.Parts, GetProperty(ResourceProperty.PartsRate));
         ChangeProperty(ResourceProperty.Food, GetProperty(ResourceProperty.FoodRate));
+        ChangeProperty(ResourceProperty.Minerals, GetProperty(ResourceProperty.MineralsRate));
     }
 
-    // private void RefreshRates()
-    // {
-    //     float newMoneyRate = 0;
-    //     float newPopulationRate = 0;
-    //     float newFuelRate = 0;
-    //     float newFoodRate = 0;
+    public void RefreshProps()
+    {
+        SetProperty(ResourceProperty.MoneyRate, 0);
+        SetProperty(ResourceProperty.PopulationRate, 0);
+        SetProperty(ResourceProperty.PartsRate, 0);
+        SetProperty(ResourceProperty.FoodRate, 0);
+        SetProperty(ResourceProperty.MineralsRate, 0);
 
-    //     if (Population >= 2)
-    //     {
-    //         newPopulationRate += passiveGrowth.peopleRate * Population;
-    //     }
-    //     newFoodRate += passiveGrowth.foodRate * Population;
-    //     newFuelRate += passiveGrowth.fuelRate * Population;
+        SetProperty(ResourceProperty.MoneyCap, 0);
+        SetProperty(ResourceProperty.PopulationCap, 0);
+        SetProperty(ResourceProperty.PartsCap, 0);
+        SetProperty(ResourceProperty.FoodCap, 0);
+        SetProperty(ResourceProperty.MineralsCap, 0);
 
-    //     moneyRate = newMoneyRate;
-    //     populationRate = newPopulationRate;
-    //     fuelRate = newFuelRate;
-    //     foodRate = newFoodRate;
+        ChangeProperty(ResourceProperty.FoodRate, GetProperty(ResourceProperty.Population) * foodRatePerPerson);
 
-    //     OnMoneyRateChanged.Invoke(moneyRate);
-    //     OnPopulationRateChanged.Invoke(populationRate);
-    //     OnFuelRateChanged.Invoke(fuelRate);
-    //     OnFoodRateChanged.Invoke(foodRate);
-    // }
+        if (GetProperty(ResourceProperty.Food) <= 0)
+        {
+            ChangeProperty(ResourceProperty.PopulationRate, GetProperty(ResourceProperty.Population) * starvationDeathRate);
+        }
+
+        foreach (BuildingDisplay building in buildings)
+        {
+            building.ApplyResources();
+        }
+    }
+
+    private float GetCap(ResourceProperty prop)
+    {
+        foreach (PropertyCap cap in propertyCaps)
+        {
+            if (cap.property == prop)
+            {
+                return GetProperty(cap.propertyCap);
+            }
+        }
+        return -1;
+    }
+
+    [Serializable]
+    private class PropertyCap
+    {
+        public ResourceProperty property;
+        public ResourceProperty propertyCap;
+    }
 }
