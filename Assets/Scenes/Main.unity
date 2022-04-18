@@ -3600,7 +3600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeTextbox: {fileID: 2111894617}
   upgradeAmount: 100000
-  goldCost: 25000000
+  goldCost: 16000000
   goldCostMult: 1.2
   isOneTime: 0
 --- !u!114 &274453052
@@ -4404,7 +4404,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: $1B
+  m_text: $800M
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -16074,7 +16074,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: $3M
+  m_text: $2.5M
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -20630,7 +20630,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeTextbox: {fileID: 1626159293}
   upgradeAmount: 20000
-  goldCost: 3000000
+  goldCost: 2500000
   goldCostMult: 1.2
   isOneTime: 0
 --- !u!1 &2073524459
@@ -21274,7 +21274,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: $25M
+  m_text: $16M
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
