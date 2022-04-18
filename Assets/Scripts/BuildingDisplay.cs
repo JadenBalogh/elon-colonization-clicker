@@ -6,6 +6,8 @@ using TMPro;
 
 public class BuildingDisplay : MonoBehaviour
 {
+    private readonly string[] Suffixes = { "", "K", "M", "B", "T" };
+
     [SerializeField] private TextMeshProUGUI titleTextbox;
     [SerializeField] private TextMeshProUGUI upgradeTextbox;
     [SerializeField] private TextMeshProUGUI upgradeButtonTextbox;
@@ -16,17 +18,18 @@ public class BuildingDisplay : MonoBehaviour
     [SerializeField] private string upgradeText;
     [SerializeField] private bool startPurchased = false;
     [SerializeField] private ResourceProperty property;
+    [SerializeField] private ResourceProperty costProperty = ResourceProperty.Parts;
     [SerializeField] private UpgradeTier[] upgradeTiers;
 
     private int currTier = -1;
 
     private void Start()
     {
-        GameManager.ResourceSystem.AddPropertyListener(ResourceProperty.Parts, (parts) => UpdateClickable());
+        GameManager.ResourceSystem.AddPropertyListener(costProperty, (parts) => UpdateClickable());
         GameManager.ResourceSystem.AddPropertyListener(ResourceProperty.Population, (pop) => UpdateClickable());
         if (startPurchased)
         {
-            Buy(); //TODO: implement buying
+            Buy();
         }
         UpdateComponents();
     }
@@ -34,6 +37,7 @@ public class BuildingDisplay : MonoBehaviour
     public void Buy()
     {
         currTier = 0;
+        GameManager.ResourceSystem.ChangeProperty(costProperty, -upgradeTiers[currTier].cost);
         GameManager.ResourceSystem.RefreshProps();
         UpdateComponents();
     }
@@ -41,6 +45,7 @@ public class BuildingDisplay : MonoBehaviour
     public void Upgrade()
     {
         currTier++;
+        GameManager.ResourceSystem.ChangeProperty(costProperty, -upgradeTiers[currTier].cost);
         GameManager.ResourceSystem.RefreshProps();
         UpdateComponents();
     }
@@ -64,11 +69,11 @@ public class BuildingDisplay : MonoBehaviour
         bool isCapped = currTier + 1 >= upgradeTiers.Length;
         if (!isCapped)
         {
-            int partsInt = Mathf.RoundToInt(GameManager.ResourceSystem.GetProperty(ResourceProperty.Parts));
+            int costInt = Mathf.RoundToInt(GameManager.ResourceSystem.GetProperty(costProperty));
             int popInt = Mathf.RoundToInt(GameManager.ResourceSystem.GetProperty(ResourceProperty.Population));
-            bool hasParts = partsInt >= upgradeTiers[currTier + 1].cost;
+            bool hasCost = costInt >= upgradeTiers[currTier + 1].cost;
             bool hasPop = popInt >= upgradeTiers[currTier + 1].populationReq;
-            upgradeButton.interactable = hasParts && hasPop;
+            upgradeButton.interactable = hasCost && hasPop;
         }
         else
         {
@@ -80,18 +85,30 @@ public class BuildingDisplay : MonoBehaviour
     {
         titleTextbox.color = currTier >= 0 ? Color.white : Color.grey;
         titleTextbox.text = buildingName + (currTier > 0 ? $" [Tier {currTier}]" : "");
-        upgradeTextbox.text = upgradeText + (currTier >= 0 ? upgradeTiers[currTier].amount : "-");
+        upgradeTextbox.text = upgradeText + (currTier >= 0 ? FormatText(upgradeTiers[currTier].amount) : "-");
         if (currTier + 1 < upgradeTiers.Length)
         {
-            upgradeButtonTextbox.text = (currTier >= 0 ? "Upgrade " : "Buy ") + $"({upgradeTiers[currTier + 1].cost})";
-            nextTierTextbox.text = (currTier >= 0 ? "Next Tier: " : "On Purchase: ") + upgradeTiers[currTier + 1].amount;
-            requirementsTextbox.text = "Min Population: " + upgradeTiers[currTier + 1].populationReq;
+            upgradeButtonTextbox.text = (currTier >= 0 ? "Upgrade " : "Buy ") + $"({FormatText(upgradeTiers[currTier + 1].cost)})";
+            nextTierTextbox.text = (currTier >= 0 ? "Next Tier: " : "On Purchase: ") + FormatText(upgradeTiers[currTier + 1].amount);
+            requirementsTextbox.text = "Min Population: " + FormatText(upgradeTiers[currTier + 1].populationReq);
         }
         else
         {
             nextTierTextbox.text = "MAX TIER";
             requirementsTextbox.text = "Min Population: -";
         }
+    }
+
+    private string FormatText(float amount)
+    {
+        int k = 0;
+        if (amount > 0)
+        {
+            k = (int)(Mathf.Log10(amount) / 3);
+        }
+        float dividor = Mathf.Pow(10, k * 3);
+        string format = amount % dividor == 0 ? "F0" : "F1";
+        return (amount / dividor).ToString(format) + Suffixes[k];
     }
 
     [System.Serializable]

@@ -11,6 +11,7 @@ public class ResourceSystem : MonoBehaviour
     [SerializeField] private BuildingDisplay[] buildings;
     [SerializeField] private float foodRatePerPerson;
     [SerializeField] private float starvationDeathRate;
+    [SerializeField] private float reproductionRate;
 
     private Dictionary<ResourceProperty, float> properties = new Dictionary<ResourceProperty, float>();
     private Dictionary<ResourceProperty, UnityEvent<float>> propertyEvents = new Dictionary<ResourceProperty, UnityEvent<float>>();
@@ -84,11 +85,19 @@ public class ResourceSystem : MonoBehaviour
         SetProperty(ResourceProperty.FoodCap, 0);
         SetProperty(ResourceProperty.MineralsCap, 0);
 
-        ChangeProperty(ResourceProperty.FoodRate, GetProperty(ResourceProperty.Population) * foodRatePerPerson);
+        int pop = Mathf.FloorToInt(GetProperty(ResourceProperty.Population));
+        float popRoot = Mathf.Pow(pop, 2f / 3f);
+
+        ChangeProperty(ResourceProperty.FoodRate, popRoot * foodRatePerPerson);
 
         if (GetProperty(ResourceProperty.Food) <= 0)
         {
-            ChangeProperty(ResourceProperty.PopulationRate, GetProperty(ResourceProperty.Population) * starvationDeathRate);
+            ChangeProperty(ResourceProperty.PopulationRate, popRoot * starvationDeathRate);
+        }
+
+        if (pop >= 2)
+        {
+            ChangeProperty(ResourceProperty.PopulationRate, pop * reproductionRate);
         }
 
         foreach (BuildingDisplay building in buildings)

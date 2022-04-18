@@ -8,8 +8,6 @@ public class TweetButton : MonoBehaviour
     [SerializeField] private Transform tweetParent;
     [SerializeField] private Transform tweetSpawn;
     [SerializeField] private TweetResult tweetPrefab;
-    [SerializeField] private int minMoneyPerClick = -20000;
-    [SerializeField] private int maxMoneyPerClick = 100000;
     [SerializeField] private string[] tweetPrefixes;
     [SerializeField] private string[] tweetBodies;
     [SerializeField] private string[] tweetSuffixes;
@@ -29,7 +27,7 @@ public class TweetButton : MonoBehaviour
     {
         StartCoroutine(ClickCooldown());
 
-        float money = Random.Range(minMoneyPerClick, maxMoneyPerClick);
+        float money = GameManager.TweetSystem.GetRandomMoney();
         string prefix = tweetPrefixes[Random.Range(0, tweetPrefixes.Length)];
         string body = tweetBodies[Random.Range(0, tweetBodies.Length)];
         string suffix = tweetSuffixes[Random.Range(0, tweetSuffixes.Length)];

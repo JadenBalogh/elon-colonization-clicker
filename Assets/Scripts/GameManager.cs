@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static ResourceSystem ResourceSystem { get; private set; }
     public static ShipSystem ShipSystem { get; private set; }
     public static DaySystem DaySystem { get; private set; }
+    public static TweetSystem TweetSystem { get; private set; }
 
     private void Awake()
     {
@@ -22,5 +23,8 @@ public class GameManager : MonoBehaviour
         ResourceSystem = GetComponent<ResourceSystem>();
         ShipSystem = GetComponent<ShipSystem>();
         DaySystem = GetComponent<DaySystem>();
+        TweetSystem = GetComponent<TweetSystem>();
+
+        Time.timeScale = 1f;
     }
 }

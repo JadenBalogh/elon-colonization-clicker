@@ -49,7 +49,7 @@ public class ResourceDisplay : MonoBehaviour
             k = (int)(Mathf.Log10(amount) / 3);
         }
         float dividor = Mathf.Pow(10, k * 3);
-        float roundedAmount = isRounded ? Mathf.CeilToInt(amount) : amount;
+        float roundedAmount = isRounded ? Mathf.FloorToInt(amount) : amount;
         string format = roundedAmount % dividor == 0 ? "F0" : "F1";
         return prefix + (roundedAmount / dividor).ToString(format) + Suffixes[k];
     }
