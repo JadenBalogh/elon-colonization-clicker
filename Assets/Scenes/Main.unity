@@ -8928,7 +8928,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: $1B
+  m_text: $600M
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9948,17 +9948,17 @@ MonoBehaviour:
   - amount: 10000
     cost: 1000000
     populationReq: 0
-  - amount: 25000
-    cost: 15000000
+  - amount: 30000
+    cost: 5000000
     populationReq: 0
-  - amount: 50000
-    cost: 75000000
+  - amount: 80000
+    cost: 12000000
     populationReq: 0
-  - amount: 100000
-    cost: 200000000
+  - amount: 250000
+    cost: 40000000
     populationReq: 0
   - amount: 1000000
-    cost: 1.2e+9
+    cost: 150000000
     populationReq: 0
 --- !u!1 &1008365904
 GameObject:
@@ -11223,7 +11223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3dcf1c566b0124894e369c6eea9cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clickCost: 1e+9
+  clickCost: 600000000
   shipSpawn: {fileID: 896840291}
   population: 0
   parts: 800000
@@ -12380,7 +12380,7 @@ MonoBehaviour:
   - {fileID: 12657153}
   - {fileID: 1007077252}
   foodRatePerPerson: -1
-  starvationDeathRate: -0.5
+  starvationDeathRate: -0.2
   reproductionRate: 0.005
 --- !u!114 &1216221457
 MonoBehaviour:
@@ -14781,7 +14781,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Purchase Twitter
 
-    (+$1M per tweet)'
+    (+$2M per tweet)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -17554,8 +17554,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   upgradeTextbox: {fileID: 367986495}
-  upgradeAmount: 1000000
-  goldCost: 1e+9
+  upgradeAmount: 2000000
+  goldCost: 800000000
   goldCostMult: 1.2
   isOneTime: 1
 --- !u!114 &1751045205
@@ -18263,7 +18263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3dcf1c566b0124894e369c6eea9cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clickCost: 1e+9
+  clickCost: 600000000
   shipSpawn: {fileID: 2094330047}
   population: 0
   parts: 0
@@ -20686,7 +20686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3dcf1c566b0124894e369c6eea9cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clickCost: 1e+9
+  clickCost: 600000000
   shipSpawn: {fileID: 332707850}
   population: 20000
   parts: 0

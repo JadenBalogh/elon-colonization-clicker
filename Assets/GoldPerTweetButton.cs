@@ -40,7 +40,7 @@ public class GoldPerTweetButton : MonoBehaviour
 
     private void UpdateText()
     {
-        upgradeTextbox.text = FormatText(goldCost);
+        upgradeTextbox.text = isPurchased ? "-" : FormatText(goldCost);
     }
 
     private string FormatText(float amount)
